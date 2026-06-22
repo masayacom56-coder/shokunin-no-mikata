@@ -541,7 +541,7 @@ export async function generateEstimatePdf(draft: EstimateDraft, documentType: Do
   drawText(ctx, "最終合計", totalsX, totalLineY + 23);
   drawRight(ctx, yen(totals.total), valueX, totalLineY + 23);
 
-  if (safeDocumentType === "invoice" || safeDocumentType === "estimate") {
+  if (safeDocumentType === "invoice") {
     const bankLines = bankAccountLines(safeDraft.company);
     ctx.font = "600 24px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
     ctx.fillStyle = "#475569";
