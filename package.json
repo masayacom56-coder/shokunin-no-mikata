@@ -1,0 +1,40 @@
+{
+  "name": "shokunin-no-mikata",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "check:dependencies": "node scripts/check-dependencies.cjs",
+    "predev": "npm run check:dependencies",
+    "dev": "next dev --hostname 0.0.0.0",
+    "prebuild": "npm run check:dependencies",
+    "build": "next build",
+    "prestart": "npm run check:dependencies",
+    "start": "next start --hostname 0.0.0.0",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test:runtime-safety": "node scripts/runtime-safety-check.cjs"
+  },
+  "dependencies": {
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/supabase-js": "^2.45.4",
+    "date-fns": "^3.6.0",
+    "globals": "^14.0.0",
+    "lucide-react": "^0.468.0",
+    "next": "^14.2.35",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "stripe": "^17.3.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.6",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.16",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "typescript": "^5.6.3"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "職人の味方",
+  "short_name": "職人見積",
+  "description": "現場で見積作成、PDF生成、送付まで完結するPWA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8faf7",
+  "theme_color": "#2f5d50",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
