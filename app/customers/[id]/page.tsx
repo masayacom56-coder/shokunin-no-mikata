@@ -8,19 +8,30 @@ import { deleteCustomer, loadState, updateCustomer } from "@/lib/app-store";
 import { normalizeCustomer, safeArray } from "@/lib/safety";
 import type { Customer } from "@/lib/types";
 
+function routeId(params: { id?: string | string[] } | null) {
+  const value = params?.id;
+  return Array.isArray(value) ? value[0] ?? "" : value ?? "";
+}
+
 export default function CustomerDetailPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
+  const customerId = routeId(params);
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [draft, setDraft] = useState<Customer | null>(null);
   const [editing, setEditing] = useState(false);
 
   useEffect(() => {
-    const found = safeArray(loadState().customers).find((item) => item.id === params.id) ?? null;
+    if (!customerId) {
+      setCustomer(null);
+      setDraft(null);
+      return;
+    }
+    const found = safeArray(loadState().customers).find((item) => item?.id === customerId) ?? null;
     const safeCustomer = found ? normalizeCustomer(found) : null;
     setCustomer(safeCustomer);
     setDraft(safeCustomer);
-  }, [params.id]);
+  }, [customerId]);
 
   function setField(key: keyof Customer, value: string) {
     setDraft((current) => (current ? { ...current, [key]: value } : current));
@@ -48,7 +59,12 @@ export default function CustomerDetailPage() {
         </header>
 
         {!customer ? (
-          <div className="mt-5 rounded bg-white p-5 text-center text-sm text-slate-500 shadow-sm">顧客が見つかりません</div>
+          <div className="mt-5 rounded bg-white p-5 text-center text-sm text-slate-500 shadow-sm">
+            顧客が見つかりません
+            <Link href="/customers" className="mt-4 flex h-12 items-center justify-center rounded border border-slate-300 bg-white font-bold text-sumi">
+              顧客管理へ戻る
+            </Link>
+          </div>
         ) : (
           <article className="mt-5 rounded bg-white p-4 shadow-sm">
             {editing && draft ? (

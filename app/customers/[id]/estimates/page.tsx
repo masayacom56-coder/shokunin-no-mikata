@@ -12,6 +12,11 @@ import { generateEstimatePdf } from "@/lib/pdf";
 import { normalizeCustomer, normalizeEstimate, safeArray } from "@/lib/safety";
 import type { AppState, Customer, DocumentType, Estimate, PdfIssueFields } from "@/lib/types";
 
+function routeId(params: { id?: string | string[] } | null) {
+  const value = params?.id;
+  return Array.isArray(value) ? value[0] ?? "" : value ?? "";
+}
+
 function formatDate(value: string) {
   return (value || "").slice(0, 10).replaceAll("-", "/");
 }
@@ -61,6 +66,7 @@ function errorMessage(error: unknown) {
 
 export default function CustomerEstimateHistoryPage() {
   const params = useParams<{ id: string }>();
+  const customerId = routeId(params);
   const [state, setState] = useState<AppState | null>(null);
   const [message, setMessage] = useState("");
   const [pendingIssue, setPendingIssue] = useState<{ estimate: Estimate; documentType: DocumentType; fields: PdfIssueFields } | null>(null);
@@ -70,23 +76,27 @@ export default function CustomerEstimateHistoryPage() {
   }, []);
 
   const customer = useMemo(() => {
-    const found = safeArray(state?.customers).find((item) => item.id === params.id) ?? null;
+    if (!customerId) return null;
+    const found = safeArray(state?.customers).find((item) => item?.id === customerId) ?? null;
     return found ? normalizeCustomer(found) : null;
-  }, [params.id, state]);
+  }, [customerId, state]);
   const estimates = useMemo(() => {
     if (!state || !customer) return [];
-    return safeArray(state.estimates).map((estimate) => normalizeEstimate(estimate)).filter((estimate) => belongsToCustomer(estimate, customer));
+    return safeArray(state.estimates)
+      .map((estimate) => normalizeEstimate(estimate))
+      .filter((estimate) => belongsToCustomer(estimate, customer));
   }, [customer, state]);
 
   function initialIssueFields(estimate: Estimate, documentType: DocumentType): PdfIssueFields {
+    const safeEstimate = normalizeEstimate(estimate);
     const today = new Date().toISOString();
     return {
-      recipientName: estimate.customer.companyName || estimate.customer.name || "御見積先",
+      recipientName: safeEstimate.customer.companyName || safeEstimate.customer.name || "御見積先",
       issueDate: formatDate(today),
-      documentNumber: estimate.estimateNo,
+      documentNumber: safeEstimate.estimateNo,
       validUntil: "発行日より14日",
       paymentDue: addDaysText(today, 30),
-      receiptNote: estimate.receiptNote || "工事代金として"
+      receiptNote: safeEstimate.receiptNote || "工事代金として"
     };
   }
 
@@ -135,7 +145,9 @@ export default function CustomerEstimateHistoryPage() {
         <p className="mt-2 font-bold text-slate-600">{customer ? customer.companyName || customer.name : ""}</p>
 
         <div className="mt-5 space-y-3">
-          {safeArray(estimates).length === 0 ? (
+          {state && !customer ? (
+            <div className="rounded bg-white p-5 text-center text-sm text-slate-500 shadow-sm">顧客が見つかりません</div>
+          ) : safeArray(estimates).length === 0 ? (
             <div className="rounded bg-white p-5 text-center text-sm text-slate-500 shadow-sm">過去の見積はありません</div>
           ) : (
             safeArray(estimates).map((estimate) => {
