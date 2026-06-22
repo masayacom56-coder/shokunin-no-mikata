@@ -7,6 +7,7 @@ import { PdfIssueModal } from "@/components/pdf-issue-modal";
 import { deleteEstimate, duplicateEstimate, loadState } from "@/lib/app-store";
 import { recordAppError, recordPdfFailure, recordPdfOutput } from "@/lib/admin-metrics";
 import { yen } from "@/lib/calc";
+import { hasCustomerId } from "@/lib/customer-route-guards";
 import { generateEstimatePdf } from "@/lib/pdf";
 import { normalizeCustomer, normalizeEstimate, safeArray } from "@/lib/safety";
 import type { AppState, Customer, DocumentType, Estimate, PdfIssueFields } from "@/lib/types";
@@ -68,7 +69,7 @@ export function CustomerEstimateHistoryClient({ customerId }: { customerId: stri
   }, []);
 
   const customer = useMemo(() => {
-    if (!customerId) return null;
+    if (!hasCustomerId(customerId)) return null;
     const found = safeArray(state?.customers).find((item) => item?.id === customerId) ?? null;
     return found ? normalizeCustomer(found) : null;
   }, [customerId, state]);

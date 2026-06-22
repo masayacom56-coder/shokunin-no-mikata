@@ -10,7 +10,7 @@
     "build": "next build",
     "prestart": "npm run check:dependencies",
     "start": "next start --hostname 0.0.0.0",
-    "lint": "next lint",
+    "lint": "eslint --no-eslintrc --resolve-plugins-relative-to . --config .eslintrc.json --ext .ts,.tsx app components lib",
     "typecheck": "tsc --noEmit",
     "test:runtime-safety": "node scripts/runtime-safety-check.cjs"
   },

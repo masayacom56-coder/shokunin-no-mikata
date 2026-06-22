@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FileText, Save, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { deleteCustomer, loadState, updateCustomer } from "@/lib/app-store";
+import { hasCustomerId } from "@/lib/customer-route-guards";
 import { normalizeCustomer, safeArray } from "@/lib/safety";
 import type { Customer } from "@/lib/types";
 
@@ -15,7 +16,7 @@ export function CustomerDetailClient({ customerId }: { customerId: string }) {
   const [editing, setEditing] = useState(false);
 
   useEffect(() => {
-    if (!customerId) {
+    if (!hasCustomerId(customerId)) {
       setCustomer(null);
       setDraft(null);
       return;

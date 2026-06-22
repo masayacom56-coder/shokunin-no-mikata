@@ -1,16 +1,14 @@
 import { CustomerEstimateHistoryClient } from "./customer-estimate-history-client";
+import { safeRouteCustomerId } from "@/lib/customer-route-guards";
 
 type CustomerEstimateHistoryPageProps = {
-  params?: {
-    id?: string | string[];
+  params: {
+    id: string;
   };
 };
 
-function routeId(params: CustomerEstimateHistoryPageProps["params"]) {
-  const value = params?.id;
-  return Array.isArray(value) ? value[0] ?? "" : value ?? "";
-}
+export const dynamic = "force-dynamic";
 
 export default function CustomerEstimateHistoryPage({ params }: CustomerEstimateHistoryPageProps) {
-  return <CustomerEstimateHistoryClient customerId={routeId(params)} />;
+  return <CustomerEstimateHistoryClient customerId={safeRouteCustomerId(params)} />;
 }

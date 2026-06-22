@@ -1,16 +1,14 @@
 import { CustomerDetailClient } from "./customer-detail-client";
+import { safeRouteCustomerId } from "@/lib/customer-route-guards";
 
 type CustomerDetailPageProps = {
-  params?: {
-    id?: string | string[];
+  params: {
+    id: string;
   };
 };
 
-function routeId(params: CustomerDetailPageProps["params"]) {
-  const value = params?.id;
-  return Array.isArray(value) ? value[0] ?? "" : value ?? "";
-}
+export const dynamic = "force-dynamic";
 
 export default function CustomerDetailPage({ params }: CustomerDetailPageProps) {
-  return <CustomerDetailClient customerId={routeId(params)} />;
+  return <CustomerDetailClient customerId={safeRouteCustomerId(params)} />;
 }
