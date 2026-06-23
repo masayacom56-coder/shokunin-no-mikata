@@ -4,6 +4,20 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true
   },
+  async redirects() {
+    return [
+      {
+        source: "/customers/:id/estimates",
+        destination: "/customers",
+        permanent: false
+      },
+      {
+        source: "/customers/:id",
+        destination: "/customers",
+        permanent: false
+      }
+    ];
+  },
   async headers() {
     return [
       {
