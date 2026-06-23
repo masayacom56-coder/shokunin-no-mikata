@@ -7,8 +7,6 @@ type CustomerEstimateHistoryPageProps = {
   };
 };
 
-export const dynamic = "force-dynamic";
-
 export default function CustomerEstimateHistoryPage({ params }: CustomerEstimateHistoryPageProps) {
   return <CustomerEstimateHistoryClient customerId={safeRouteCustomerId(params)} />;
 }

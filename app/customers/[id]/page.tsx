@@ -7,8 +7,6 @@ type CustomerDetailPageProps = {
   };
 };
 
-export const dynamic = "force-dynamic";
-
 export default function CustomerDetailPage({ params }: CustomerDetailPageProps) {
   return <CustomerDetailClient customerId={safeRouteCustomerId(params)} />;
 }
