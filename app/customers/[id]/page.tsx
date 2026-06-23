@@ -1,6 +1,5 @@
-import { CustomerDetailClient } from "./customer-detail-client";
-import { safeRouteCustomerId, type CustomerRouteParams } from "@/lib/customer-route-guards";
+import { redirect } from "next/navigation";
 
-export default function CustomerDetailPage({ params }: { params: CustomerRouteParams }) {
-  return <CustomerDetailClient customerId={safeRouteCustomerId(params)} />;
+export default function CustomerDetailPage() {
+  redirect("/customers");
 }
