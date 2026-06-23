@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { FileText, Save, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { deleteCustomer, loadState, updateCustomer } from "@/lib/app-store";
-import { hasCustomerId } from "@/lib/customer-route-guards";
+import { encodeRouteCustomerId, hasCustomerId } from "@/lib/customer-route-guards";
 import { normalizeCustomer, safeArray } from "@/lib/safety";
 import type { Customer } from "@/lib/types";
 
@@ -98,7 +98,7 @@ export function CustomerDetailClient({ customerId }: { customerId: string }) {
               </div>
             )}
 
-            <Link href={`/estimates/new?customerId=${customer.id}`} className="mt-5 flex h-16 items-center justify-center gap-2 rounded bg-moss text-xl font-black text-white">
+            <Link href={`/estimates/new?customerId=${encodeRouteCustomerId(customer.id)}`} className="mt-5 flex h-16 items-center justify-center gap-2 rounded bg-moss text-xl font-black text-white">
               <FileText size={24} />
               見積作成
             </Link>

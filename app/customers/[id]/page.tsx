@@ -1,14 +1,6 @@
-"use client";
-
 import { CustomerDetailClient } from "./customer-detail-client";
-import { useParams } from "next/navigation";
+import { safeRouteCustomerId, type CustomerRouteParams } from "@/lib/customer-route-guards";
 
-function routeId(value: string | string[] | undefined) {
-  const id = Array.isArray(value) ? value[0] : value;
-  return typeof id === "string" ? id.trim() : "";
-}
-
-export default function CustomerDetailPage() {
-  const params = useParams<{ id?: string | string[] }>();
-  return <CustomerDetailClient customerId={routeId(params?.id)} />;
+export default function CustomerDetailPage({ params }: { params: CustomerRouteParams }) {
+  return <CustomerDetailClient customerId={safeRouteCustomerId(params)} />;
 }

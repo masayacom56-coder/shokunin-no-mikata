@@ -6,6 +6,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { BackButton } from "@/components/back-button";
 import { createCustomer, loadState } from "@/lib/app-store";
 import { recordAppError } from "@/lib/admin-metrics";
+import { encodeRouteCustomerId } from "@/lib/customer-route-guards";
 import { normalizeCustomer, safeArray } from "@/lib/safety";
 import type { Customer } from "@/lib/types";
 
@@ -122,6 +123,7 @@ export default function CustomersPage() {
           ) : (
             safeArray(customers).map((customer) => {
               const safeCustomer = normalizeCustomer(customer);
+              const customerRouteId = encodeRouteCustomerId(safeCustomer.id);
               return (
               <article key={safeCustomer.id} className="rounded bg-white p-4 shadow-sm">
                 <div className="flex items-start justify-between gap-3">
@@ -135,15 +137,15 @@ export default function CustomersPage() {
                   </span>
                 </div>
                 <div className="mt-3 grid grid-cols-3 gap-2">
-                  <Link href={`/customers/${safeCustomer.id}`} className="flex h-12 items-center justify-center rounded border border-slate-300 font-bold text-sumi">
+                  <a href={`/customers/${customerRouteId}`} className="flex h-12 items-center justify-center rounded border border-slate-300 font-bold text-sumi">
                     詳細
-                  </Link>
-                  <Link href={`/estimates/new?customerId=${safeCustomer.id}`} className="flex h-12 items-center justify-center gap-2 rounded bg-moss font-bold text-white">
+                  </a>
+                  <Link href={`/estimates/new?customerId=${customerRouteId}`} className="flex h-12 items-center justify-center gap-2 rounded bg-moss font-bold text-white">
                     見積作成
                   </Link>
-                  <Link href={`/customers/${safeCustomer.id}/estimates`} className="flex h-12 items-center justify-center rounded border border-slate-300 text-center text-sm font-bold text-sumi">
+                  <a href={`/customers/${customerRouteId}/estimates`} className="flex h-12 items-center justify-center rounded border border-slate-300 text-center text-sm font-bold text-sumi">
                     過去の見積
-                  </Link>
+                  </a>
                 </div>
               </article>
             );
