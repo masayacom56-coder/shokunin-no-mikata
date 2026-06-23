@@ -9,7 +9,7 @@ import { encodeRouteCustomerId, hasCustomerId } from "@/lib/customer-route-guard
 import { normalizeCustomer, safeArray } from "@/lib/safety";
 import type { Customer } from "@/lib/types";
 
-export function CustomerDetailClient({ customerId }: { customerId: string }) {
+export function CustomerDetailClient({ customerId, onBack }: { customerId: string; onBack?: () => void }) {
   const router = useRouter();
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [draft, setDraft] = useState<Customer | null>(null);
@@ -55,9 +55,7 @@ export function CustomerDetailClient({ customerId }: { customerId: string }) {
         {!customer ? (
           <div className="mt-5 rounded bg-white p-5 text-center text-sm text-slate-500 shadow-sm">
             顧客が見つかりません
-            <Link href="/customers" className="mt-4 flex h-12 items-center justify-center rounded border border-slate-300 bg-white font-bold text-sumi">
-              顧客管理へ戻る
-            </Link>
+            <BackToCustomers label="顧客管理へ戻る" onBack={onBack} className="mt-4 flex h-12 items-center justify-center rounded border border-slate-300 bg-white font-bold text-sumi" />
           </div>
         ) : (
           <article className="mt-5 rounded bg-white p-4 shadow-sm">
@@ -110,14 +108,27 @@ export function CustomerDetailClient({ customerId }: { customerId: string }) {
                 <Trash2 size={16} />
                 削除
               </button>
-              <Link href="/customers" className="flex h-12 items-center justify-center rounded border border-slate-300 font-bold text-sumi">
-                戻る
-              </Link>
+              <BackToCustomers label="戻る" onBack={onBack} className="flex h-12 items-center justify-center rounded border border-slate-300 font-bold text-sumi" />
             </div>
           </article>
         )}
       </section>
     </main>
+  );
+}
+
+function BackToCustomers({ label, onBack, className }: { label: string; onBack?: () => void; className: string }) {
+  if (onBack) {
+    return (
+      <button type="button" onClick={onBack} className={className}>
+        {label}
+      </button>
+    );
+  }
+  return (
+    <Link href="/customers" className={className}>
+      {label}
+    </Link>
   );
 }
 

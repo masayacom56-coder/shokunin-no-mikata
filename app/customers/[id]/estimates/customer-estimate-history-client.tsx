@@ -59,7 +59,7 @@ function errorMessage(error: unknown) {
   }
 }
 
-export function CustomerEstimateHistoryClient({ customerId }: { customerId: string }) {
+export function CustomerEstimateHistoryClient({ customerId, onBack }: { customerId: string; onBack?: () => void }) {
   const [state, setState] = useState<AppState | null>(null);
   const [message, setMessage] = useState("");
   const [pendingIssue, setPendingIssue] = useState<{ estimate: Estimate; documentType: DocumentType; fields: PdfIssueFields } | null>(null);
@@ -185,9 +185,15 @@ export function CustomerEstimateHistoryClient({ customerId }: { customerId: stri
         </div>
 
         {message ? <p className="mt-4 rounded bg-white p-3 text-center text-sm font-black text-moss shadow-sm">{message}</p> : null}
-        <Link href="/customers" className="mt-4 flex h-12 items-center justify-center rounded border border-slate-300 bg-white font-bold text-sumi">
-          顧客管理へ戻る
-        </Link>
+        {onBack ? (
+          <button type="button" onClick={onBack} className="mt-4 flex h-12 w-full items-center justify-center rounded border border-slate-300 bg-white font-bold text-sumi">
+            顧客管理へ戻る
+          </button>
+        ) : (
+          <Link href="/customers" className="mt-4 flex h-12 items-center justify-center rounded border border-slate-300 bg-white font-bold text-sumi">
+            顧客管理へ戻る
+          </Link>
+        )}
       </section>
       {pendingIssue ? (
         <PdfIssueModal

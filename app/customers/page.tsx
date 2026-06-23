@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Building2, Save, User } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import { BackButton } from "@/components/back-button";
+import { CustomerDetailClient } from "./[id]/customer-detail-client";
+import { CustomerEstimateHistoryClient } from "./[id]/estimates/customer-estimate-history-client";
 import { createCustomer, loadState } from "@/lib/app-store";
 import { recordAppError } from "@/lib/admin-metrics";
 import { encodeRouteCustomerId } from "@/lib/customer-route-guards";
@@ -12,6 +14,8 @@ import type { Customer } from "@/lib/types";
 
 export default function CustomersPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [activeCustomerId, setActiveCustomerId] = useState("");
+  const [activeView, setActiveView] = useState<"list" | "detail" | "history">("list");
   const [message, setMessage] = useState("");
   const [type, setType] = useState<"individual" | "corporate">("individual");
   const [name, setName] = useState("");
@@ -26,6 +30,14 @@ export default function CustomersPage() {
   useEffect(() => {
     setCustomers(safeArray(loadState().customers).map((customer) => normalizeCustomer(customer)));
   }, []);
+
+  if (activeView === "detail") {
+    return <CustomerDetailClient customerId={activeCustomerId} onBack={() => setActiveView("list")} />;
+  }
+
+  if (activeView === "history") {
+    return <CustomerEstimateHistoryClient customerId={activeCustomerId} onBack={() => setActiveView("list")} />;
+  }
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -137,15 +149,29 @@ export default function CustomersPage() {
                   </span>
                 </div>
                 <div className="mt-3 grid grid-cols-3 gap-2">
-                  <a href={`/customers/${customerRouteId}`} className="flex h-12 items-center justify-center rounded border border-slate-300 font-bold text-sumi">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveCustomerId(safeCustomer.id);
+                      setActiveView("detail");
+                    }}
+                    className="flex h-12 items-center justify-center rounded border border-slate-300 font-bold text-sumi"
+                  >
                     詳細
-                  </a>
+                  </button>
                   <Link href={`/estimates/new?customerId=${customerRouteId}`} className="flex h-12 items-center justify-center gap-2 rounded bg-moss font-bold text-white">
                     見積作成
                   </Link>
-                  <a href={`/customers/${customerRouteId}/estimates`} className="flex h-12 items-center justify-center rounded border border-slate-300 text-center text-sm font-bold text-sumi">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveCustomerId(safeCustomer.id);
+                      setActiveView("history");
+                    }}
+                    className="flex h-12 items-center justify-center rounded border border-slate-300 text-center text-sm font-bold text-sumi"
+                  >
                     過去の見積
-                  </a>
+                  </button>
                 </div>
               </article>
             );
