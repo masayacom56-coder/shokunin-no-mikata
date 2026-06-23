@@ -1,12 +1,14 @@
+"use client";
+
 import { CustomerEstimateHistoryClient } from "./customer-estimate-history-client";
-import { safeRouteCustomerId } from "@/lib/customer-route-guards";
+import { useParams } from "next/navigation";
 
-type CustomerEstimateHistoryPageProps = {
-  params: {
-    id: string;
-  };
-};
+function routeId(value: string | string[] | undefined) {
+  const id = Array.isArray(value) ? value[0] : value;
+  return typeof id === "string" ? id.trim() : "";
+}
 
-export default function CustomerEstimateHistoryPage({ params }: CustomerEstimateHistoryPageProps) {
-  return <CustomerEstimateHistoryClient customerId={safeRouteCustomerId(params)} />;
+export default function CustomerEstimateHistoryPage() {
+  const params = useParams<{ id?: string | string[] }>();
+  return <CustomerEstimateHistoryClient customerId={routeId(params?.id)} />;
 }
