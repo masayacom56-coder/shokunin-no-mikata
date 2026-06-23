@@ -1,3 +1,14 @@
-export default function Page() {
-  return <div>TEST_OK</div>;
+import { CustomerDetailClient } from "./customer-detail-client";
+import { safeRouteCustomerId } from "@/lib/customer-route-guards";
+
+type CustomerDetailPageProps = {
+  params: {
+    id: string;
+  };
+};
+
+export const dynamic = "force-dynamic";
+
+export default function CustomerDetailPage({ params }: CustomerDetailPageProps) {
+  return <CustomerDetailClient customerId={safeRouteCustomerId(params)} />;
 }
